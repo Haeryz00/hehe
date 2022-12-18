@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-
 struct login
 {
     char fnama[128];
@@ -12,8 +11,6 @@ struct login
     char password[128];
 };
 
-
-
 void regis();
 void lomgin();
 void biru ();
@@ -21,11 +18,16 @@ void putih ();
 void hijau ();
 void merah ();
 void oldprog();
+void struk(float sum_money, float kembalian, char nama [30], char kasir[128],const char tel[30], const char email[30], const char web [30]);
 
 int main (){
     int pilih;
-    printf("1. untuk register\n2. untuk login"); scanf("%d", &pilih);
+    char ulang;
+    
+    salah :
+    printf("1. untuk register\n2. untuk login\n3. Exit\n"); scanf("%d", &pilih);
 
+   
     switch (pilih)
     {
     case 1:
@@ -35,13 +37,22 @@ int main (){
     case 2:
         system("cls");
         lomgin();
+        break;
+    case 3:
+        system("cls");
+        exit(0);
+        break;
     default:
+    system("cls");
+    printf("Menu tidak tersedia\n");
+    goto salah;
         break;
     }
+
     
+    return 0;
 }
 
-void lomgin();
 void regis(){
     FILE *log;
     log = fopen("Username.txt", "w");
@@ -52,7 +63,7 @@ void regis(){
     printf("username : \n"); scanf("%s", &user.username);
     printf("password : \n"); scanf("%s", &user.password);
 
-    fwrite(&user, sizeof(user), 1, log);
+    fwrite(&user, sizeof(user), 1, log); //write user pada memory address log sebanyak 1x
 
     fclose(log);
 
@@ -68,35 +79,36 @@ void lomgin(){
     FILE *log;
     log = fopen("Username.txt", "r");
     struct login user;
+
+    if (log == NULL)
+    {
+        printf("Error file tidak ditemukan");
+    }
+    
+
+    relog :
     printf("Username : "); scanf("%s", &username);
     printf("Password : "); scanf("%s", &password); fflush(stdin);
 
-    while (fread(&user, sizeof(user), 1, log))
+    while (fread(&user, sizeof(user), 1, log)) //read user pada memory address log sebanyak 1x
     {
         if (strcmp(username, user.username) == 0 && strcmp(password, user.password) == 0)
         {
             printf("Login berhasil\n");
+            printf("Selamat datang %s\n", user.username);
             oldprog();
         } else if (strcmp(username, "Rusdi") == 0 && strcmp(password, "admin") == 0)
         {
             printf("Login berhasil sebagai admin");
         } else {
-            printf("Username atau password salah");
+            system("cls");
+            printf("Username atau password salah\n");
+            goto relog;
         }
         
     }
     fclose(log);
 }
-
-
-
-
-
-
-
-
-
-
 
 void oldprog(){
     //data variable
@@ -106,27 +118,22 @@ void oldprog(){
     const int harga [5] = {5000,7000,9000,11000,13000}; //array harga
     int stock [5] = {50, 30, 20, 10, 5};
     char nama[30];
-    const char web [30] = "www.rusdishop.com"; 
+    const char web [30] = "www.jokikoding.com"; 
     const char tel [30] = "087755704083";
     const char email [30] = "rusdishop69@bluwin.ch";
-    char username [20];
     char tambah;
     int dynamicStock;
-    int kembalian, mKurang;
+    float kembalian; 
+    int mKurang;
     int mInput [100];
     float sum_money;
     int i;
 
-    //variabel menu utama
-
-
-   
-
-    
-
+    struct login user;
+    FILE *log;
+    log = fopen("Username.txt", "r");
 
     user :
-    //inputan user
     printf("Pembelian atas nama : "); gets(nama);
 
    
@@ -238,11 +245,6 @@ void oldprog(){
      system("cls");
     } while (tambah == 'Y' || tambah == 'y');
 
-
-
-    
-   
-
     // looping pembayaran
     for (i = 0; i < 5; i++)
     {
@@ -274,21 +276,14 @@ void oldprog(){
         
     }
     
-
-
     //lamjutan y
     struk :
     hijau(); system("cls");
-    printf("\n\t----- RINCIAN PEMBELIAN -----\n");
-    printf("Anda membayar dengan jumlah = %.2f", sum_money);
-    printf("\nKembalian anda sebesar = %d", kembalian);
-    printf("\nPembelian atas nama : %s\n", nama);
-    printf("Dengan kasir : %s\n", username);
-    printf("Nomor telepon : %s\n", tel);
-    printf("Email : %s\n", email);
-    printf("Jangan lupa kunjungi e-shop kami di %s\n", web);
+    while (fread(&user, sizeof(user), 1, log)){
+    struk(sum_money, kembalian, nama, user.username,tel, email, web);
+    }
     putih();
-
+    fclose(log);
 }
 
 void biru (){
@@ -304,7 +299,16 @@ void merah (){
     printf("\033[0;31m");
 }
 
-// // function : total, 
+void struk(float sum_money, float kembalian, char nama [30], char kasir[128],const char tel[30], const char email[30], const char web [30]){
+    printf("\n\t----- RINCIAN PEMBELIAN -----\n");
+    printf("Anda membayar dengan jumlah = %.2f", sum_money);
+    printf("\nKembalian anda sebesar = %.2f", kembalian);
+    printf("\nPembelian atas nama : %s\n", nama);
+    printf("Dengan kasir : %s\n", kasir);
+    printf("Nomor telepon : %s\n", tel);
+    printf("Email : %s\n", email);
+    printf("Jangan lupa kunjungi e-shop kami di %s\n", web);
+}
 
 
 
