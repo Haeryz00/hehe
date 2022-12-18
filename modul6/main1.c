@@ -44,13 +44,15 @@ int main (){
         break;
     default:
     system("cls");
+    merah();
     printf("Menu tidak tersedia\n");
+    putih();
     goto salah;
         break;
     }
 
     
-    return 0;
+    return 0; //return 0 means that the program will execute successfully and did what it was intended to do.
 }
 
 void regis(){
@@ -82,7 +84,9 @@ void lomgin(){
 
     if (log == NULL)
     {
+        merah();
         printf("Error file tidak ditemukan");
+        putih();
     }
     
 
@@ -90,19 +94,23 @@ void lomgin(){
     printf("Username : "); scanf("%s", &username);
     printf("Password : "); scanf("%s", &password); fflush(stdin);
 
-    while (fread(&user, sizeof(user), 1, log)) //read user pada memory address log sebanyak 1x
+    while (fread(&user, sizeof(user), 1, log)) //read user pada memory address log sebanyak 1x looping
     {
         if (strcmp(username, user.username) == 0 && strcmp(password, user.password) == 0)
         {
+            hijau();
             printf("Login berhasil\n");
             printf("Selamat datang %s\n", user.username);
+            putih();
             oldprog();
         } else if (strcmp(username, "Rusdi") == 0 && strcmp(password, "admin") == 0)
         {
             printf("Login berhasil sebagai admin");
         } else {
             system("cls");
+            merah();
             printf("Username atau password salah\n");
+            putih();
             goto relog;
         }
         
