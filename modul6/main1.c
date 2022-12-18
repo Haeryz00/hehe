@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+//variabel struc untuk fungsi regis dan login
 struct login
 {
     char fnama[128];
@@ -11,6 +12,7 @@ struct login
     char password[128];
 };
 
+// deklarasi fungsi karena fungsi ditaruh dibawah int main
 void regis();
 void lomgin();
 void biru ();
@@ -20,9 +22,9 @@ void merah ();
 void oldprog();
 void struk(float sum_money, float kembalian, char nama [30], char kasir[128],const char tel[30], const char email[30], const char web [30]);
 
+//fungsi main
 int main (){
     int pilih;
-    char ulang;
     
     salah :
     printf("1. untuk register\n2. untuk login\n3. Exit\n"); scanf("%d", &pilih);
@@ -55,6 +57,7 @@ int main (){
     return 0; //return 0 means that the program will execute successfully and did what it was intended to do.
 }
 
+// fungsi registrasi akun 
 void regis(){
     FILE *log;
     log = fopen("Username.txt", "w");
@@ -75,7 +78,9 @@ void regis(){
     lomgin();
 }
 
+//fungsi login
 void lomgin(){
+    relog :
     char username[128], password[20];
 
     FILE *log;
@@ -90,7 +95,7 @@ void lomgin(){
     }
     
 
-    relog :
+    
     printf("Username : "); scanf("%s", &username);
     printf("Password : "); scanf("%s", &password); fflush(stdin);
 
@@ -119,7 +124,7 @@ void lomgin(){
 }
 
 void oldprog(){
-    //data variable
+    //data variable fungsi kasir
     int number, n;
     int total = 0;
     char ask;
@@ -145,7 +150,7 @@ void oldprog(){
     printf("Pembelian atas nama : "); gets(nama);
 
    
-    //looping tambah barang
+    // loop apabila ingin tambah
    do{
     ulang : 
     biru();
@@ -164,7 +169,7 @@ void oldprog(){
     printf("apa yang ingin anda beli : "); scanf("%d", &number);
 
 
-    //code switch
+    //pilihan masing - masing menu 
     switch (number)
     {
     case 1:
@@ -178,6 +183,15 @@ void oldprog(){
         }
         
         printf("Berapa banyak anda ingin beli : "); scanf("%d", &n);
+        if (n > stock[0])
+        {
+            system("cls");
+            merah();
+            printf("Quantitas yang dibeli melebihi stock yang tersedia\n");
+            putih();
+            goto ulang;
+        }
+        
         total+= harga[0]*n; // total + harga[0 / 5000]*quantity
         dynamicStock = stock[0] - n;
         stock[0] = dynamicStock;
@@ -190,8 +204,17 @@ void oldprog(){
             printf("Stock habis");
             putih();
             goto ulang;
-        }    
+        }  
+
         printf("Berapa banyak anda ingin beli : "); scanf("%d", &n);
+        if (n > stock[1])
+        {
+            system("cls");
+            merah();
+            printf("Quantitas yang dibeli melebihi stock yang tersedia\n");
+            putih();
+            goto ulang;
+        }
         total+= harga[1]*n;
         dynamicStock = stock[1] - n;
         stock[1] = dynamicStock;
@@ -205,7 +228,16 @@ void oldprog(){
             putih();
             goto ulang;
         }
+
         printf("Berapa banyak anda ingin beli : "); scanf("%d", &n);
+        if (n > stock[2])
+        {
+            system("cls");
+            merah();
+            printf("Quantitas yang dibeli melebihi stock yang tersedia\n");
+            putih();
+            goto ulang;
+        }
         total+= harga[2]*n;
         dynamicStock = stock[2] - n;
         stock[2] = dynamicStock;
@@ -219,6 +251,16 @@ void oldprog(){
             putih();
             goto ulang;
         }
+
+        if (n > stock[3])
+        {
+            system("cls");
+            merah();
+            printf("Quantitas yang dibeli melebihi stock yang tersedia\n");
+            putih();
+            goto ulang;
+        }
+
         printf("Berapa banyak anda ingin beli : "); scanf("%d", &n);
         total+= harga[3]*n;
         dynamicStock = stock[3] - n;
@@ -233,7 +275,18 @@ void oldprog(){
             putih();
             goto ulang;
         }
+
+
+
         printf("Berapa banyak anda ingin beli : "); scanf("%d", &n);
+        if (n > stock[4])
+        {
+            system("cls");
+            merah();
+            printf("Quantitas yang dibeli melebihi stock yang tersedia\n");
+            putih();
+            goto ulang;
+        }
         total+= harga[4]*n;
         dynamicStock = stock[4] - n;
         stock[4] = dynamicStock;
@@ -253,7 +306,7 @@ void oldprog(){
      system("cls");
     } while (tambah == 'Y' || tambah == 'y');
 
-    // looping pembayaran
+    // looping pembayaran apabila kurang disuruh menginput uang yang kurang
     for (i = 0; i < 5; i++)
     {
         minputulang :
@@ -284,7 +337,7 @@ void oldprog(){
         
     }
     
-    //lamjutan y
+    
     struk :
     hijau(); system("cls");
     while (fread(&user, sizeof(user), 1, log)){
@@ -294,8 +347,9 @@ void oldprog(){
     fclose(log);
 }
 
+//fungsi warna ANSI 8, akses menggunakan escape dan kode warna. \033 adalah escape dan [0;31m adalah kode warna
 void biru (){
-    printf("\033[0;36m");
+    printf("\033[0;36m"); 
 }
 void putih (){
     printf("\033[0;37m");
@@ -307,6 +361,7 @@ void merah (){
     printf("\033[0;31m");
 }
 
+//fungsi struk belanja, parameter tidak harus sama dengan yang ada di int main, namun harus memiliki tipe datau yang sama
 void struk(float sum_money, float kembalian, char nama [30], char kasir[128],const char tel[30], const char email[30], const char web [30]){
     printf("\n\t----- RINCIAN PEMBELIAN -----\n");
     printf("Anda membayar dengan jumlah = %.2f", sum_money);
