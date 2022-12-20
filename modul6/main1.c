@@ -25,7 +25,8 @@ void struk(float sum_money, float kembalian, char nama [30], char kasir[128],con
 //fungsi main
 int main (){
     int pilih;
-    
+    system("cls");
+    putih();
     salah :
     printf("1. untuk register\n2. untuk login\n3. Exit\n"); scanf("%d", &pilih);
 
@@ -90,7 +91,8 @@ void lomgin(){
     if (log == NULL)
     {
         merah();
-        printf("Error file tidak ditemukan");
+        printf("Error file tidak ditemukan\n");
+        exit(1);
         putih();
     }
     
@@ -99,8 +101,8 @@ void lomgin(){
     printf("Username : "); scanf("%s", &username);
     printf("Password : "); scanf("%s", &password); fflush(stdin);
 
-    while (fread(&user, sizeof(user), 1, log)) //read user pada memory address log sebanyak 1x looping
-    {
+    (fread(&user, sizeof(user), 1, log)); //read user pada memory address log 
+    
         if (strcmp(username, user.username) == 0 && strcmp(password, user.password) == 0)
         {
             hijau();
@@ -119,7 +121,7 @@ void lomgin(){
             goto relog;
         }
         
-    }
+    
     fclose(log);
 }
 
@@ -340,9 +342,8 @@ void oldprog(){
     
     struk :
     hijau(); system("cls");
-    while (fread(&user, sizeof(user), 1, log)){
-    struk(sum_money, kembalian, nama, user.username,tel, email, web);
-    }
+    (fread(&user, sizeof(user), 1, log));
+    struk(sum_money, kembalian, nama, user.fnama,tel, email, web);
     putih();
     fclose(log);
 }
@@ -372,6 +373,5 @@ void struk(float sum_money, float kembalian, char nama [30], char kasir[128],con
     printf("Email : %s\n", email);
     printf("Jangan lupa kunjungi e-shop kami di %s\n", web);
 }
-
 
 
