@@ -42,7 +42,7 @@ void lomgin(){
     printf("Username : "); scanf("%s", &username);
     printf("Password : "); scanf("%s", &password);
 
-    while (fread(&user, sizeof(user), 1, log))
+    fread(&user, sizeof(user), 1, log);
     {
         if (strcmp(username, user.username) == 0 && strcmp(password, user.password) == 0)
         {
