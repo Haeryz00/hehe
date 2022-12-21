@@ -53,9 +53,7 @@ int main (){
     goto salah;
         break;
     }
-
-    
-    return 0; //return 0 means that the program will execute successfully and did what it was intended to do.
+     return 0; //return 0 means that the program will execute successfully and did what it was intended to do.
 }
 
 // fungsi registrasi akun 
@@ -69,7 +67,7 @@ void regis(){
     printf("username : \n"); scanf("%s", &user.username);
     printf("password : \n"); scanf("%s", &user.password);
 
-    fwrite(&user, sizeof(user), 1, log); //write user pada memory address log sebanyak 1x
+    fwrite(&user, sizeof(user), 1, log); //write user pada varibel memory address user sebanyak size user 1x ke pointer log. Dengan kata lain data sebanyak sizeof user dikali 1
 
     fclose(log);
 
@@ -101,7 +99,7 @@ void lomgin(){
     printf("Username : "); scanf("%s", &username);
     printf("Password : "); scanf("%s", &password); fflush(stdin);
 
-    (fread(&user, sizeof(user), 1, log)); //read user pada memory address log 
+    (fread(&user, sizeof(user), 1, log)); //read user pada pointer file log pada memory address user, membaca sebanyak sizeof 1x 
     
         if (strcmp(username, user.username) == 0 && strcmp(password, user.password) == 0)
         {
