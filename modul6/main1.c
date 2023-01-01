@@ -2,6 +2,9 @@
 #include <conio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
+#include <stdbool.h>
+
 
 // variabel struc untuk fungsi regis dan login
 struct login
@@ -12,15 +15,22 @@ struct login
     char password[128];
 };
 
+int f;
+int arr[5];
+
+
+
 // deklarasi fungsi karena fungsi ditaruh dibawah int main
 void regis();
-void lomgin();
+bool lomgin();
 void biru();
 void putih();
 void hijau();
 void merah();
 void oldprog();
 void struk(float sum_money, float kembalian, char nama[30], char kasir[128], const char tel[30], const char email[30], const char web[30]);
+void receipt(float sum_money, float kembalian, char nama[30], char kasir[128], const char tel[30], const char email[30], const char web[30]);
+void viewName();
 
 // fungsi main
 int main()
@@ -37,6 +47,7 @@ salah:
     case 1:
         system("cls");
         regis();
+        
         break;
     case 2:
         system("cls");
@@ -61,7 +72,7 @@ salah:
 void regis()
 {
     FILE *log;
-    log = fopen("Username.txt", "w");
+    log = fopen("Username.bin", "wb");
     struct login user;
 
     printf("Masukan nama pertama anda : \n");
@@ -84,12 +95,12 @@ void regis()
 }
 
 // fungsi login
-void lomgin()
+bool lomgin()
 {
     char username[128], password[20];
-    relog:
     FILE *log;
-    log = fopen("Username.txt", "r");
+    relog:
+    log = fopen("Username.bin", "rb");
     struct login user;
 
     if (log == NULL)
@@ -115,6 +126,7 @@ void lomgin()
         printf("Selamat datang %s\n", user.username);
         putih();
         oldprog();
+        return true;
     }
     else if (strcmp(username, "Rusdi") == 0 && strcmp(password, "admin") == 0)
     {
@@ -126,6 +138,7 @@ void lomgin()
         merah();
         printf("Username atau password salah\n");
         putih();
+        return false;
         goto relog;
     }
 
@@ -152,9 +165,19 @@ void oldprog()
     float sum_money;
     int i;
 
+    char menu [5][100] = {
+        "KOPI",
+        "KEBAB",
+        "MIE GORENG",
+        "BATAGOR",
+        "BURGER"
+    };
+
+
+    // printf("%s", menu[1]);
     struct login user;
     FILE *log;
-    log = fopen("Username.txt", "r");
+    log = fopen("Username.bin", "rb");
 
 user:
     printf("Pembelian atas nama : ");
@@ -164,18 +187,20 @@ user:
     do
     {
     ulang:
+
         biru();
         printf("\n|----------------------------------------------------|\n");
         printf("|<<<<<<<<<<<< SELAMAT DATANG DI TOKO RUSDI >>>>>>>>>>|\n");
         printf("|----------------------------------------------------|\n");
         printf("|   JENIS PRODUK           ||  HARGA      || STOCK   |\n");
-        printf("|1. KOPI                   ||   %d      ||  %d     |\n", harga[0], stock[0]);
-        printf("|2. KEBAB                  ||   %d      ||  %d     |\n", harga[1], stock[1]);
-        printf("|3. MIE GORENG IRENG       ||   %d      ||  %d     |\n", harga[2], stock[2]);
-        printf("|4. BATAGOR                ||   %d     ||  %d     |\n", harga[3], stock[3]);
-        printf("|5. BURGER                 ||   %d     ||  %d      |\n", harga[4], stock[4]);
+        printf("|1. %s                   ||   %d      ||  %d     |\n",menu[0], harga[0], stock[0]);
+        printf("|2. %s                  ||   %d      ||  %d     |\n",menu[1], harga[1], stock[1]);
+        printf("|3. %s             ||   %d      ||  %d     |\n",menu[2], harga[2], stock[2]);
+        printf("|4. %s                ||   %d     ||  %d     |\n",menu[3], harga[3], stock[3]);
+        printf("|5. %s                 ||   %d     ||  %d      |\n",menu[4], harga[4], stock[4]);
+        printf("|6. view by name (a - z)                             |\n");
         printf("|----------------------------------------------------|\n");
-
+    ascend:
         putih();
         printf("apa yang ingin anda beli : ");
         scanf("%d", &number);
@@ -299,14 +324,19 @@ user:
                 merah();
                 printf("Quantitas yang dibeli melebihi stock yang tersedia\n");
                 putih();
-                goto ulang;
+                goto ascend;
             }
             total += harga[4] * n;
             dynamicStock = stock[4] - n;
             stock[4] = dynamicStock;
             break;
             {
-            default:
+        case 6:
+        viewName();   
+        goto ascend;
+        break;   
+
+        default:
                 merah();
                 system("cls");
                 printf("Menu tidak tersedia\n");
@@ -359,6 +389,7 @@ struk:
     system("cls");
     (fread(&user, sizeof(user), 1, log));
     struk(sum_money, kembalian, nama, user.fnama, tel, email, web);
+    receipt(sum_money, kembalian, nama, user.fnama, tel, email, web);
     putih();
     fclose(log);
 }
@@ -384,6 +415,25 @@ void merah()
 // fungsi struk belanja, parameter tidak harus sama dengan yang ada di int main, namun harus memiliki tipe datau yang sama
 void struk(float sum_money, float kembalian, char nama[30], char kasir[128], const char tel[30], const char email[30], const char web[30])
 {
+    time_t now = time(NULL);
+    FILE *his;
+    his = fopen("History.txt", "a+");
+    char *string_now = ctime(&now);
+    fprintf(his,"\n\t----- RINCIAN PEMBELIAN -----\n");
+    fprintf(his,"Anda membayar dengan jumlah = %.2f", sum_money);
+    fprintf(his,"\nKembalian anda sebesar = %.2f", kembalian);
+    fprintf(his,"\nPembelian atas nama : %s\n", nama);
+    fprintf(his,"Dengan kasir : %s\n", kasir);
+    fprintf(his,"Nomor telepon : %s\n", tel);
+    fprintf(his,"Email : %s\n", email);
+    fprintf(his,"Jangan lupa kunjungi e-shop kami di %s\n", web);
+    fprintf(his, "pada waktu : %s\n", string_now);
+}
+
+void receipt(float sum_money, float kembalian, char nama[30], char kasir[128], const char tel[30], const char email[30], const char web[30])
+{
+    time_t now = time(NULL);
+    char *string_now = ctime(&now);
     printf("\n\t----- RINCIAN PEMBELIAN -----\n");
     printf("Anda membayar dengan jumlah = %.2f", sum_money);
     printf("\nKembalian anda sebesar = %.2f", kembalian);
@@ -392,4 +442,51 @@ void struk(float sum_money, float kembalian, char nama[30], char kasir[128], con
     printf("Nomor telepon : %s\n", tel);
     printf("Email : %s\n", email);
     printf("Jangan lupa kunjungi e-shop kami di %s\n", web);
+    printf("Pada waktu : %s\n", string_now);
 }
+
+void viewName (){
+        char menu [5][100] = {
+        " KOPI                   ||  5000       ||   50",
+        " KEBAB                  ||  7000       ||   30",
+        " MIE GORENG             ||  9000       ||   20",
+        " BATAGOR                || 11000       ||   10",
+        " BURGER                 || 13000       ||   5"
+    };
+
+
+    int length = 5; //panjang array
+    char temp [100]; //variabel temporary untuk membantu swap 
+
+    //selection sort
+    for (int i = 0; i < (length - 1); i++) //i merupakan inisialisasi sesuai index [0 - 5] pada array menu, -1 karena tidak perlu mengurutkan string paling bawah A-Z 
+  {
+    // find the position of the minimum string (alphabetically minimum)
+    int j_min = i;
+    for (int j = i + 1; j < length; j++)
+      if (strcmp(menu[j], menu[j_min]) < 0) // <0 artinya apabila s1 memiliki nilai lebih kecil daripada s20 (sesuai huruf dibawah 0)
+        j_min = j;
+    
+    // if necessary, swap the minimum string with the string at index i
+    if (j_min != i)
+    {
+      strcpy(temp, menu[i]);
+      strcpy(menu[i], menu[j_min]);
+      strcpy(menu[j_min], temp);
+    }
+  }
+  
+    biru();
+    printf("\n|----------------------------------------------------|\n");
+    printf("|<<<<<<<<<<<< SELAMAT DATANG DI TOKO RUSDI >>>>>>>>>>|\n");
+    printf("|----------------------------------------------------|\n");
+    printf("|   JENIS PRODUK           ||  HARGA      || STOCK   |\n");
+
+    for (int i = 0; i < length; i++){
+    printf("| %10s     |\n", menu[i]);
+    }
+    printf("|----------------------------------------------------|\n");
+    putih();
+}
+
+
